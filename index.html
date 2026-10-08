@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Invoice Nusawarna - invoice profesional dengan ekspor PDF.">
+  <title>Invoice Nusawarna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;750;800;850&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="scene-bg" aria-hidden="true">
+    <div class="mesh"></div><div class="float-orb a"></div><div class="float-orb b"></div>
+  </div>
+
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <div class="topnav-icon" data-logo aria-hidden="true"><i class="fas fa-file-invoice"></i></div>
+      <div class="topnav-name">Invoice <em>Nusawarna</em></div>
+    </div>
+    <div class="topnav-right">
+      <button class="btn-nav" type="button" onclick="openModal()"><i class="fas fa-pen-to-square"></i><span>Edit</span></button>
+      <button class="btn-nav" type="button" onclick="window.print()"><i class="fas fa-print"></i><span>Cetak</span></button>
+      <button class="btn-nav fill" type="button" onclick="savePDF()"><i class="fas fa-file-pdf"></i><span>Simpan PDF</span></button>
+    </div>
+  </nav>
+
+  <main class="page-wrap">
+    <article class="inv-shell" id="invoiceShell">
+      <header class="inv-banner">
+        <div class="deco"></div><div class="deco-line"></div>
+        <div class="banner-row">
+          <div class="brand-block">
+            <div class="brand-icon" data-logo aria-hidden="true"><i class="fas fa-file-invoice"></i></div>
+            <div class="brand-title">
+              <span>NUSA</span>
+              <SPAN>WARNA</SPAN>
+            </div>
+          </div>
+          <div class="invoice-heading">
+            <div class="invoice-label">INVOICE</div>
+            <div class="inv-no-label">No. Inv: <b id="invNoD">#INV-001</b></div>
+          </div>
+        </div>
+      </header>
+
+      <section class="inv-body">
+        <div class="info-pair">
+          <div class="info-tile">
+            <div class="info-tile-k"><i class="fas fa-building"></i> Dari</div>
+            <div class="info-tile-v" id="fromN"></div>
+            <div class="info-tile-d" id="fromD"></div>
+          </div>
+          <div class="info-tile">
+            <div class="info-tile-k"><i class="fas fa-user"></i> Kepada</div>
+            <div class="info-tile-v" id="toN"></div>
+            <div class="info-tile-d" id="toD"></div>
+          </div>
+        </div>
+
+        <div class="date-strip">
+          <div class="date-chip"><div class="date-chip-k">Tanggal Invoice</div><div class="date-chip-v" id="invDt"></div></div>
+          <div class="date-chip"><div class="date-chip-k">Jatuh Tempo</div><div class="date-chip-v" id="dueDt"></div></div>
+          <div class="date-chip"><div class="date-chip-k">Mata Uang</div><div class="date-chip-v" id="curD"></div></div>
+        </div>
+
+        <div class="sec-label"><i class="fas fa-list"></i> Rincian Item</div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th style="width:4%">#</th><th>Deskripsi</th><th style="width:9%">Qty</th><th style="width:17%">Harga</th><th style="width:17%">Jumlah</th></tr></thead>
+            <tbody id="tBody"></tbody>
+          </table>
+        </div>
+
+        <div class="sum-grid">
+          <div class="sum-note">
+            <div class="sum-note-k"><i class="fas fa-sticky-note"></i> Catatan</div>
+            <p id="notesD"></p>
+          </div>
+          <div class="sum-calc">
+            <div class="calc-r"><span class="cl">Subtotal</span><span class="cv" id="subD">Rp 0</span></div>
+            <div class="calc-r"><span class="cl">Diskon Item</span><span class="cv" id="discD">- Rp 0</span></div>
+            <div class="calc-div"></div>
+            <div class="calc-r"><span class="cl">Setelah Diskon</span><span class="cv" id="aftD">Rp 0</span></div>
+            <div class="calc-r"><span class="cl">PPN (<span id="txP">0</span>%)</span><span class="cv" id="txD">Rp 0</span></div>
+            <div class="calc-div"></div>
+            <div class="calc-r grand"><span class="cl">Total</span><span class="cv" id="totD">Rp 0</span></div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="inv-foot">
+        <div class="inv-foot-l">Invoice Nusawarna</div>
+        <div class="inv-foot-r">
+          <div class="inv-foot-i"><i class="fas fa-envelope"></i> nusawarnalotim@gmail.com</div>
+          <div class="inv-foot-i"><i class="fas fa-phone"></i> +62 877-6039-3337</div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <div class="mo-overlay" id="editMo" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="mo-box">
+      <div class="mo-head">
+        <h2 id="editTitle"><i class="fas fa-pen-to-square"></i> Edit Invoice</h2>
+        <button class="mo-x" type="button" onclick="closeModal()" aria-label="Tutup"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="mo-inner">
+        <div class="f2">
+          <div class="fg"><label class="fl" for="eNo">Nomor Invoice</label><input class="fi" id="eNo" type="text"></div>
+          <div class="fg"><label class="fl" for="eDt">Tanggal Invoice (Otomatis)</label><input class="fi" id="eDt" type="date" disabled></div>
+          <div class="fg"><label class="fl" for="eDue">Jatuh Tempo</label><input class="fi" id="eDue" type="date"></div>
+          <div class="fg"><label class="fl" for="eCur">Mata Uang</label><select class="fs" id="eCur"><option value="IDR">IDR - Rupiah</option><option value="USD">USD - Dolar AS</option><option value="EUR">EUR - Euro</option><option value="SGD">SGD - Dolar Singapura</option></select></div>
+          <div class="fg"><label class="fl" for="eTx">PPN (%)</label><input class="fi" id="eTx" type="number" min="0" max="100" step="0.1"></div>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="f2">
+          <div>
+            <div class="fg"><label class="fl" for="eFN">Nama Pengirim</label><input class="fi" id="eFN" type="text"></div>
+            <div class="fg"><label class="fl" for="eFD">Alamat Pengirim</label><textarea class="ft" id="eFD" rows="3"></textarea></div>
+          </div>
+          <div>
+            <div class="fg"><label class="fl" for="eTN">Nama Penerima</label><input class="fi" id="eTN" type="text"></div>
+            <div class="fg"><label class="fl" for="eTD">Alamat Penerima</label><textarea class="ft" id="eTD" rows="3"></textarea></div>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="sec-label"><i class="fas fa-image"></i> Logo Perusahaan</div>
+        <div class="logo-settings">
+          <div class="logo-preview" id="logoPreview"><i class="fas fa-file-invoice"></i></div>
+          <div>
+            <div class="logo-actions">
+              <label class="btn pri" for="logoInput"><i class="fas fa-upload"></i> Pilih PNG/JPG</label>
+              <input id="logoInput" type="file" accept="image/png,image/jpeg" hidden>
+              <button class="btn sec" type="button" onclick="resetLogo()"><i class="fas fa-rotate-left"></i> Reset</button>
+            </div>
+            <div class="small-note">Logo tersimpan di browser ini dan otomatis tampil di invoice serta PDF. Maksimal 2 MB.</div>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="sec-label"><i class="fas fa-list"></i> Item Barang / Jasa</div>
+        <div class="edit-table-wrap">
+          <table class="etbl">
+            <thead><tr><th>Nama</th><th>Deskripsi</th><th>Qty</th><th>Harga</th><th>Diskon</th><th>Jumlah</th><th></th></tr></thead>
+            <tbody id="eTBody"></tbody>
+          </table>
+        </div>
+        <button class="add-btn" type="button" onclick="addEItem()"><i class="fas fa-plus"></i> Tambah Item</button>
+
+        <hr class="form-divider">
+
+        <div class="fg">
+          <label class="fl" for="eNotes">Catatan</label>
+          <textarea class="ft" id="eNotes" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="mo-foot">
+        <button class="btn sec" type="button" onclick="closeModal()">Batal</button>
+        <button class="btn pri" type="button" onclick="applyEdit()"><i class="fas fa-check"></i> Terapkan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pdf-loading" id="pdfLoad" aria-live="polite">
+    <div class="pdf-spinner"></div><span>Membuat PDF...</span>
+  </div>
+  <div class="toast-box" id="toastBox" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
