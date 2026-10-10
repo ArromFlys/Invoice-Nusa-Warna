@@ -15,9 +15,9 @@ const DEFAULT_DATA = {
     fromDetail: "Jl. Pejanggik No.40, Pancor\nLombok Timur, 83611\nIndonesia",
     toName: "Matori",
     toDetail: "Jl. Lintas Laskar, Masbagik\nLombok Timur, 40262\nIndonesia",
-    notes: "Pembayaran dapat dilakukan melalui transfer bank ke rekening MANDIRI 1610077777170 a.n. CV. NUSA WARNA KREASI",
+    notes: "Pembayaran dapat dilakukan melalui transfer bank ke rekening MANDIRI 1610077777170 a.n. CV. NUSAWARNA KREASI.",
     items: [
-        {name:"Kaos", desc:"S 1", qty:1, price:150000, discount:0}
+      {name:"Kaos", desc:"S 1", qty:1, price:150000, discount:0},
     ]
 };
 
